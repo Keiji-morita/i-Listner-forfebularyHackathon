@@ -12,22 +12,22 @@ class memoArea extends StatefulWidget {
 
 class _memoAreaState extends State<memoArea> {
   // Todoリストのデータ
-  List<String> todoList = [];
+  List<String> memoList = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // AppBarを表示し、タイトルも設定
       appBar: AppBar(
-        title: Text('リスト一覧'),
+        title: Text('Home'),
       ),
       // データを元にListViewを作成
       body: ListView.builder(
-        itemCount: todoList.length,
+        itemCount: memoList.length,
         itemBuilder: (context, index) {
           return Card(
             child: ListTile(
-              title: Text(todoList[index]),
+              title: Text(memoList[index]),
             ),
           );
         },
@@ -46,11 +46,12 @@ class _memoAreaState extends State<memoArea> {
             // キャンセルした場合は newListText が null となるので注意
             setState(() {
               // リスト追加
-              todoList.add(newListText);
+              memoList.add(newListText);
             });
           }
         },
-        child: Icon(Icons.add),
+        backgroundColor: Colors.green,
+        child: const Icon(Icons.settings_voice),
       ),
     );
   }
