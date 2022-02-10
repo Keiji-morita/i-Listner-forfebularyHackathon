@@ -37,34 +37,78 @@ class _voiceTexterState extends State<voiceTexter> {
                 });
               },
             ),
-            const SizedBox(height: 8),
-            Container(
-              // 横幅いっぱいに広げる
-              width: double.infinity,
-              // リスト追加ボタン
-              child: ElevatedButton(
-                onPressed: () {
-                  // "pop"で前の画面に戻る
-                  // "pop"の引数から前の画面にデータを渡す
-                  Navigator.of(context).pop(_text);
-                },
-                child: Text('リスト追加', style: TextStyle(color: Colors.white)),
+
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+
+            SizedBox(
+            height: 60,
+            width: 60,
+            child: ElevatedButton(
+              child: const Icon(Icons.delete),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red,
+                onPrimary: Colors.white,
+                shape: const CircleBorder(
+                  side: BorderSide(
+                    color: Colors.red,
+                    width: 1,
+                    style: BorderStyle.solid,
+                  ),
+                ),
               ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
             ),
-            const SizedBox(height: 8),
-            Container(
-              // 横幅いっぱいに広げる
-              width: double.infinity,
-              // キャンセルボタン
-              child: TextButton(
-                // ボタンをクリックした時の処理
-                onPressed: () {
-                  // "pop"で前の画面に戻る
-                  Navigator.of(context).pop();
-                },
-                child: Text('キャンセル'),
+          ),
+
+          SizedBox(
+            height: 60,
+            width: 60,
+            child: ElevatedButton(
+              child: const Icon(Icons.save_alt),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.yellow,
+                onPrimary: Colors.white,
+                shape: const CircleBorder(
+                  side: BorderSide(
+                    color: Colors.yellow,
+                    width: 1,
+                    style: BorderStyle.solid,
+                  ),
+                ),
               ),
+              onPressed: () {
+                Navigator.of(context).pop(_text);
+              },
             ),
+          ),
+
+          SizedBox(
+            height: 60,
+            width: 60,
+            child: ElevatedButton(
+              child: const Icon(Icons.content_copy),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blue,
+                onPrimary: Colors.white,
+                shape: const CircleBorder(
+                  side: BorderSide(
+                    color: Colors.blue,
+                    width: 1,
+                    style: BorderStyle.solid,
+                  ),
+                ),
+              ),
+              onPressed: () {},
+            ),
+          ),
+           ],
+         )
+
           ],
         ),
       ),
