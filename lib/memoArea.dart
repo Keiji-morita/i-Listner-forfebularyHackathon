@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:secondfebproject/voiceTexter.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class memoArea extends StatefulWidget {
   @override
@@ -10,6 +11,8 @@ class _memoAreaState extends State<memoArea> {
   // Todoリストのデータ
   List<String> memoList = [];
 
+  get direction => DismissDirection.endToStart;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,27 +21,31 @@ class _memoAreaState extends State<memoArea> {
         title: Text('Home'),
       ),
       // データを元にListViewを作成
-      body: ListView.builder(
-        itemCount: memoList.length,
-        itemBuilder: (context, index) {
-          return new Dismissible(
+        body: ListView.builder(
+          itemCount: memoList.length,
+          itemBuilder: (context, index) {
+            return new Dismissible(
               child: new Card(
-               child: ListTile(
-                title: Text(memoList[index]),
-            ),
+                child: ListTile(
+                  title: Text(memoList[index]),
+                ),
               ),
-            key: ValueKey<String>(memoList[index]),
-            onDismissed: (DismissDirection direction) {
-              setState(() {
-                memoList.removeAt(index);
-              });
-            },
-          );
+              key: ValueKey<String>(memoList[index]),
+              background: Container(
+                color: Colors.red,
+                child:  Icon(Icons.delete )
+              ),
+              onDismissed: (DismissDirection direction) {
+                setState(() {
+                  memoList.removeAt(index);
+                });
+              },
+            );
 
-        },
-      ),
+          },
+        ),
 
-      floatingActionButton: FloatingActionButton(
+        floatingActionButton: FloatingActionButton(
         onPressed: () async {
           // "push"で新規画面に遷移
           // リスト追加画面から渡される値を受け取る
