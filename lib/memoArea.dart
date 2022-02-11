@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:secondfebproject/voiceTexter.dart';
 
-
-
-
-
 class memoArea extends StatefulWidget {
   @override
   _memoAreaState createState() => _memoAreaState();
@@ -25,13 +21,23 @@ class _memoAreaState extends State<memoArea> {
       body: ListView.builder(
         itemCount: memoList.length,
         itemBuilder: (context, index) {
-          return Card(
-            child: ListTile(
-              title: Text(memoList[index]),
+          return new Dismissible(
+              child: new Card(
+               child: ListTile(
+                title: Text(memoList[index]),
             ),
+              ),
+            key: ValueKey<String>(memoList[index]),
+            onDismissed: (DismissDirection direction) {
+              setState(() {
+                memoList.removeAt(index);
+              });
+            },
           );
+
         },
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           // "push"で新規画面に遷移
@@ -43,16 +49,14 @@ class _memoAreaState extends State<memoArea> {
             }),
           );
           if (newListText != null) {
-            // キャンセルした場合は newListText が null となるので注意
             setState(() {
-              // リスト追加
               memoList.add(newListText);
             });
           }
         },
         backgroundColor: Colors.green,
         child: const Icon(Icons.settings_voice),
-      ),
+      )
     );
   }
 }
