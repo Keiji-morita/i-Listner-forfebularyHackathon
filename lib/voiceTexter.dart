@@ -3,6 +3,7 @@ import 'package:secondfebproject/memoArea.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:permission_handler/permission_handler.dart';
 
 
 
@@ -52,6 +53,13 @@ class _voiceTexterState extends State<voiceTexter> {
     });
   }
 
+   permissonsStatus () async{
+    var status = await Permission.mediaLibrary.status;
+    if (status != PermissionStatus.granted) {
+      await Permission.mediaLibrary.request();
+    }
+  }
+
 
   // データを元に表示するWidget
   @override
@@ -68,8 +76,9 @@ class _voiceTexterState extends State<voiceTexter> {
           children: <Widget>[
             // 入力されたテキストを表示
             Text(_text, style: TextStyle(color: Colors.blue)),
+
             const SizedBox(height: 8),
-            // テキスト入力
+            Text(lastWords),
             TextField(
               // 入力されたテキストの値を受け取る（valueが入力されたテキスト）
               onChanged: (String value) {
@@ -82,7 +91,11 @@ class _voiceTexterState extends State<voiceTexter> {
             ),
 
             Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-              FloatingActionButton(onPressed: _speak, child: Icon(Icons.play_arrow)),
+              FloatingActionButton(onPressed: () {
+                permissonsStatus();
+                _speak();
+                },
+                  child: Icon(Icons.play_arrow)),
               FloatingActionButton(onPressed: _stop, child: Icon(Icons.stop))
             ]),
 

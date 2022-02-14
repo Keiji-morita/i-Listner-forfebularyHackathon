@@ -35,10 +35,7 @@ class _memoAreaState extends State<memoArea> {
                 color: Colors.red,
                 child:  Icon(Icons.delete )
               ),
-              secondaryBackground: Container(
-                  color: Colors.blue,
-                  child:  Icon(Icons.content_copy)
-              ),
+
               onDismissed: (DismissDirection direction) {
                 setState(() {
                   memoList.removeAt(index);
