@@ -74,22 +74,8 @@ class _voiceTexterState extends State<voiceTexter> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // 入力されたテキストを表示
-            Text(_text, style: TextStyle(color: Colors.blue)),
-
             const SizedBox(height: 8),
             Text(lastWords),
-            TextField(
-              // 入力されたテキストの値を受け取る（valueが入力されたテキスト）
-              onChanged: (String value) {
-                // データが変更したことを知らせる（画面を更新する）
-                setState(() {
-                  // データを変更
-                  _text = value;
-                });
-              },
-            ),
-
             Row(mainAxisAlignment: MainAxisAlignment.end, children: [
               FloatingActionButton(onPressed: () {
                 permissonsStatus();
@@ -142,7 +128,7 @@ class _voiceTexterState extends State<voiceTexter> {
                 ),
               ),
               onPressed: () {
-                Navigator.of(context).pop(_text);
+                Navigator.of(context).pop( lastWords );
               },
             ),
           ),
