@@ -37,6 +37,7 @@ dependencies:
   flutter_slidable: ^1.2.0
   speech_to_text:
   permission_handler:
+  clipboard:
 
 
 dev_dependencies:

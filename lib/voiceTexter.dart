@@ -14,21 +14,29 @@ class voiceTexter extends StatefulWidget {
 
 class _voiceTexterState extends State<voiceTexter> {
   // 入力されたテキストをデータとして持つ
-  String _text = '';
-
   String lastWords = "";
   String lastError = '';
   String lastStatus = '';
   stt.SpeechToText speech = stt.SpeechToText();
 
+
+
+
+
+
   Future<void> _speak() async {
+    // var locales = await speech.locales();
+    // var selectedLocale = locales["jp"];
     bool available = await speech.initialize(
         onError: errorListener, onStatus: statusListener);
     if (available) {
-      speech.listen(onResult: resultListener);
+      speech.listen(onResult: resultListener,
+        // localeId: selectedLocale.localeId,
+      );
     } else {
       print("The user has denied the use of speech recognition.");
     }
+
   }
 
   Future<void> _stop() async {
@@ -38,6 +46,7 @@ class _voiceTexterState extends State<voiceTexter> {
   void resultListener(SpeechRecognitionResult result) {
     setState(() {
       lastWords = '${result.recognizedWords}';
+
     });
   }
 
@@ -53,7 +62,7 @@ class _voiceTexterState extends State<voiceTexter> {
     });
   }
 
-   permissonsStatus () async{
+  permissonsStatus () async{
     var status = await Permission.mediaLibrary.status;
     if (status != PermissionStatus.granted) {
       await Permission.mediaLibrary.request();
@@ -61,12 +70,14 @@ class _voiceTexterState extends State<voiceTexter> {
   }
 
 
+
+
   // データを元に表示するWidget
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('リスト追加'),
+        title: Text('Write note with your voice'),
       ),
       body: Container(
         // 余白を付ける
@@ -75,85 +86,87 @@ class _voiceTexterState extends State<voiceTexter> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const SizedBox(height: 8),
-            Text(lastWords),
+            Text(lastWords, style: TextStyle(color:Colors.blue, fontSize: 30)),
+
+
             Row(mainAxisAlignment: MainAxisAlignment.end, children: [
               FloatingActionButton(onPressed: () {
                 permissonsStatus();
                 _speak();
-                },
+              },
                   child: Icon(Icons.play_arrow)),
               FloatingActionButton(onPressed: _stop, child: Icon(Icons.stop))
             ]),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
 
-            SizedBox(
-            height: 60,
-            width: 60,
-            child: ElevatedButton(
-              child: const Icon(Icons.delete),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.red,
-                onPrimary: Colors.white,
-                shape: const CircleBorder(
-                  side: BorderSide(
-                    color: Colors.red,
-                    width: 1,
-                    style: BorderStyle.solid,
+                SizedBox(
+                  height: 60,
+                  width: 60,
+                  child: ElevatedButton(
+                    child: const Icon(Icons.delete),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.red,
+                      onPrimary: Colors.white,
+                      shape: const CircleBorder(
+                        side: BorderSide(
+                          color: Colors.red,
+                          width: 1,
+                          style: BorderStyle.solid,
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
                 ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
 
-          SizedBox(
-            height: 60,
-            width: 60,
-            child: ElevatedButton(
-              child: const Icon(Icons.save_alt),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.yellow,
-                onPrimary: Colors.white,
-                shape: const CircleBorder(
-                  side: BorderSide(
-                    color: Colors.yellow,
-                    width: 1,
-                    style: BorderStyle.solid,
+                SizedBox(
+                  height: 60,
+                  width: 60,
+                  child: ElevatedButton(
+                    child: const Icon(Icons.save_alt),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.yellow,
+                      onPrimary: Colors.white,
+                      shape: const CircleBorder(
+                        side: BorderSide(
+                          color: Colors.yellow,
+                          width: 1,
+                          style: BorderStyle.solid,
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop(lastWords);
+                    },
                   ),
                 ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop( lastWords );
-              },
-            ),
-          ),
 
-          SizedBox(
-            height: 60,
-            width: 60,
-            child: ElevatedButton(
-              child: const Icon(Icons.content_copy),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.blue,
-                onPrimary: Colors.white,
-                shape: const CircleBorder(
-                  side: BorderSide(
-                    color: Colors.blue,
-                    width: 1,
-                    style: BorderStyle.solid,
+                SizedBox(
+                  height: 60,
+                  width: 60,
+                  child: ElevatedButton(
+                    child: const Icon(Icons.content_copy),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.blue,
+                      onPrimary: Colors.white,
+                      shape: const CircleBorder(
+                        side: BorderSide(
+                          color: Colors.blue,
+                          width: 1,
+                          style: BorderStyle.solid,
+                        ),
+                      ),
+                    ),
+                    onPressed: () {},
                   ),
                 ),
-              ),
-              onPressed: () {},
-            ),
-          ),
-           ],
-         )
+              ],
+            )
 
           ],
         ),
