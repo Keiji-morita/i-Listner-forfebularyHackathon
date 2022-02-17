@@ -25,13 +25,14 @@ class _voiceTexterState extends State<voiceTexter> {
 
 
   Future<void> _speak() async {
-    // var locales = await speech.locales();
-    // var selectedLocale = locales["jp"];
+    stt.SpeechToText speech = stt.SpeechToText();
+     var locales = await speech.locales();
+    var selectedLocale = locales["jp"];
     bool available = await speech.initialize(
         onError: errorListener, onStatus: statusListener);
     if (available) {
       speech.listen(onResult: resultListener,
-        // localeId: selectedLocale.localeId,
+         localeId: selectedLocale.localeId,
       );
     } else {
       print("The user has denied the use of speech recognition.");
