@@ -38,6 +38,7 @@ dependencies:
   speech_to_text:
   permission_handler:
   clipboard:
+  avatar_glow:
 
 
 dev_dependencies:

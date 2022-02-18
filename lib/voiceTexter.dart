@@ -1,9 +1,6 @@
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
-import 'package:secondfebproject/memoArea.dart';
-import 'package:speech_to_text/speech_recognition_error.dart';
-import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
-import 'package:permission_handler/permission_handler.dart';
 
 
 
@@ -13,165 +10,87 @@ class voiceTexter extends StatefulWidget {
 }
 
 class _voiceTexterState extends State<voiceTexter> {
-  // 入力されたテキストをデータとして持つ
-  String lastWords = "";
-  String lastError = '';
-  String lastStatus = '';
-  stt.SpeechToText speech = stt.SpeechToText();
+  late stt.SpeechToText _speech;
+  bool _isListening = false;
+  String _text = 'Press the button and start speaking';
+  String _localeId = '';
 
-
-
-
-
-
-  Future<void> _speak() async {
-    stt.SpeechToText speech = stt.SpeechToText();
-     var locales = await speech.locales();
-    var selectedLocale = locales["jp"];
-    bool available = await speech.initialize(
-        onError: errorListener, onStatus: statusListener);
-    if (available) {
-      speech.listen(onResult: resultListener,
-         localeId: selectedLocale.localeId,
-      );
-    } else {
-      print("The user has denied the use of speech recognition.");
-    }
-
+  @override
+  void initState() {
+    super.initState();
+    _speech = stt.SpeechToText();
   }
 
-  Future<void> _stop() async {
-    speech.stop();
-  }
-
-  void resultListener(SpeechRecognitionResult result) {
-    setState(() {
-      lastWords = '${result.recognizedWords}';
-
-    });
-  }
-
-  void errorListener(SpeechRecognitionError error) {
-    setState(() {
-      lastError = '${error.errorMsg} - ${error.permanent}';
-    });
-  }
-
-  void statusListener(String status) {
-    setState(() {
-      lastStatus = '$status';
-    });
-  }
-
-  permissonsStatus () async{
-    var status = await Permission.mediaLibrary.status;
-    if (status != PermissionStatus.granted) {
-      await Permission.mediaLibrary.request();
-    }
-  }
-
-
-
-
-  // データを元に表示するWidget
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Write note with your voice'),
+        title: Text('hogehoge'),
       ),
-      body: Container(
-        // 余白を付ける
-        padding: EdgeInsets.all(64),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const SizedBox(height: 8),
-            Text(lastWords, style: TextStyle(color:Colors.blue, fontSize: 30)),
-
-
-            Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-              FloatingActionButton(onPressed: () {
-                permissonsStatus();
-                _speak();
-              },
-                  child: Icon(Icons.play_arrow)),
-              FloatingActionButton(onPressed: _stop, child: Icon(Icons.stop))
-            ]),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-
-                SizedBox(
-                  height: 60,
-                  width: 60,
-                  child: ElevatedButton(
-                    child: const Icon(Icons.delete),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.red,
-                      onPrimary: Colors.white,
-                      shape: const CircleBorder(
-                        side: BorderSide(
-                          color: Colors.red,
-                          width: 1,
-                          style: BorderStyle.solid,
-                        ),
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ),
-
-                SizedBox(
-                  height: 60,
-                  width: 60,
-                  child: ElevatedButton(
-                    child: const Icon(Icons.save_alt),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.yellow,
-                      onPrimary: Colors.white,
-                      shape: const CircleBorder(
-                        side: BorderSide(
-                          color: Colors.yellow,
-                          width: 1,
-                          style: BorderStyle.solid,
-                        ),
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop(lastWords);
-                    },
-                  ),
-                ),
-
-                SizedBox(
-                  height: 60,
-                  width: 60,
-                  child: ElevatedButton(
-                    child: const Icon(Icons.content_copy),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.blue,
-                      onPrimary: Colors.white,
-                      shape: const CircleBorder(
-                        side: BorderSide(
-                          color: Colors.blue,
-                          width: 1,
-                          style: BorderStyle.solid,
-                        ),
-                      ),
-                    ),
-                    onPressed: () {},
-                  ),
-                ),
-              ],
-            )
-
-          ],
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: AvatarGlow(
+        animate: _isListening,
+        glowColor: Theme.of(context).primaryColor,
+        endRadius: 75.0,
+        duration: const Duration(milliseconds: 2000),
+        repeatPauseDuration: const Duration(milliseconds: 100),
+        repeat: true,
+        child: FloatingActionButton(
+          onPressed: _listen,
+          child: Icon(_isListening ? Icons.mic : Icons.mic_none),
+        ),
+      ),
+      body: SingleChildScrollView(
+        reverse: true,
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 150.0),
+          child: Text(_text),
         ),
       ),
     );
   }
+
+  void _listen() async {
+    if (!_isListening) {
+      bool available = await _speech.initialize(
+        onStatus: (val) => print('onStatus: $val'),
+        onError: (val) => print('onError: $val'),
+      );
+      if (available) {
+        var systemLocale = await _speech.systemLocale();
+        _localeId = systemLocale!.localeId;
+        setState(() => _isListening = true);
+        _speech.listen(
+            onResult: (val) => setState(() {
+              _text = val.recognizedWords;
+            }),
+            localeId: _localeId);
+      }
+    } else {
+      setState(() => _isListening = false);
+      _speech.stop();
+    }
+  }
 }
+
+// SizedBox(
+// height: 60,
+// width: 60,
+// child: ElevatedButton(
+// child: const Icon(Icons.save_alt),
+// style: ElevatedButton.styleFrom(
+// primary: Colors.yellow,
+// onPrimary: Colors.white,
+// shape: const CircleBorder(
+// side: BorderSide(
+// color: Colors.yellow,
+// width: 1,
+// style: BorderStyle.solid,
+// ),
+// ),
+// ),
+// onPressed: () {
+// Navigator.of(context).pop(lastWords);
+// },
+// ),
+// ),

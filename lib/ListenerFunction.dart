@@ -1,82 +1,135 @@
 import 'package:flutter/material.dart';
-import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:speech_to_text/speech_to_text.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key? key}) : super(key: key);
 
-class ListenerFunction extends StatefulWidget {
-  ListenerFunction({Key? key, this.title}) : super(key: key);
-  final String? title;
   @override
-  _ListenerFunctionState createState() => _ListenerFunctionState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _ListenerFunctionState extends State<ListenerFunction> {
-  String lastWords = "";
-  String lastError = '';
-  String lastStatus = '';
-  stt.SpeechToText speech = stt.SpeechToText();
+class _MyHomePageState extends State<MyHomePage> {
+  SpeechToText _speechToText = SpeechToText();
+  bool _speechEnabled = false;
+  String _lastWords = '';
 
-  Future<void> _speak() async {
-    bool available = await speech.initialize(
-        onError: errorListener, onStatus: statusListener);
-    if (available) {
-      speech.listen(onResult: resultListener);
-    } else {
-      print("The user has denied the use of speech recognition.");
+  permissonsStatus () async{
+    var status = await Permission.mediaLibrary.status;
+    if (status != PermissionStatus.granted) {
+      await Permission.mediaLibrary.request();
     }
   }
 
-  Future<void> _stop() async {
-    speech.stop();
+
+  @override
+  void initState() {
+    super.initState();
+    _initSpeech();
   }
 
-  void resultListener(SpeechRecognitionResult result) {
+  /// This has to happen only once per app
+  void _initSpeech() async {
+    _speechEnabled = await _speechToText.initialize();
+    setState(() {});
+  }
+
+  /// Each time to start a speech recognition session
+  void _startListening() async {
+
+
+    // var locales = await speech.locales();
+    // var selectedLocale = locales["jp"];
+    await _speechToText.listen(onResult: _onSpeechResult);
+    setState(() {});
+  }
+
+  /// Manually stop the active speech recognition session
+  /// Note that there are also timeouts that each platform enforces
+  /// and the SpeechToText plugin supports setting timeouts on the
+  /// listen method.
+  void _stopListening() async {
+    await _speechToText.stop();
+    setState(() {});
+  }
+
+  /// This is the callback that the SpeechToText plugin calls when
+  /// the platform returns recognized words.
+  void _onSpeechResult(SpeechRecognitionResult result) {
     setState(() {
-      lastWords = '${result.recognizedWords}';
+      _lastWords = result.recognizedWords;
     });
   }
 
-  void errorListener(SpeechRecognitionError error) {
-    setState(() {
-      lastError = '${error.errorMsg} - ${error.permanent}';
-    });
-  }
 
-  void statusListener(String status) {
-    setState(() {
-      lastStatus = '$status';
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title!),
+        title: Text('Speech Demo'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              '変換文字:$lastWords',
-              style: Theme.of(context).textTheme.headline4,
-
+            Container(
+              padding: EdgeInsets.all(16),
+              child: Text(
+                'Recognized words:',
+                style: TextStyle(fontSize: 20.0),
+              ),
             ),
-            Text(
-              'ステータス : $lastStatus',
-              style: Theme.of(context).textTheme.headline4,
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.all(16),
+                child: Text(
+                  // If listening is active show the recognized words
+                  _speechToText.isListening
+                      ? '$_lastWords'
+                  // If listening isn't active but could be tell the user
+                  // how to start it, otherwise indicate that speech
+                  // recognition is not yet ready or not supported on
+                  // the target device
+                      : _speechEnabled
+                      ? 'Tap the microphone to start listening...'
+                      : 'Speech not available',
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 60,
+              width: 60,
+              child: ElevatedButton(
+                child: const Icon(Icons.save_alt),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.yellow,
+                  onPrimary: Colors.white,
+                  shape: const CircleBorder(
+                    side: BorderSide(
+                      color: Colors.yellow,
+                      width: 1,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(_lastWords);
+                },
+              ),
             ),
           ],
         ),
       ),
-      floatingActionButton:
-      Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-        FloatingActionButton(onPressed: _speak, child: Icon(Icons.play_arrow)),
-        FloatingActionButton(onPressed: _stop, child: Icon(Icons.stop))
-      ]),
+      floatingActionButton: FloatingActionButton(
+        onPressed:
+        // If not yet listening for speech start, otherwise stop
+        _speechToText.isNotListening ? _startListening : _stopListening,
+        tooltip: 'Listen',
+        child: Icon(_speechToText.isNotListening ? Icons.mic_off : Icons.mic),
+      ),
     );
   }
 }
