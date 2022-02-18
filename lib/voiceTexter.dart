@@ -1,6 +1,7 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:clipboard/clipboard.dart';
 
 
 
@@ -14,18 +15,34 @@ class _voiceTexterState extends State<voiceTexter> {
   bool _isListening = false;
   String _text = 'Press the button and start speaking';
   String _localeId = '';
+  TextEditingController controller = TextEditingController();
+  bool isKeepButtonActive = true;
 
   @override
   void initState() {
     super.initState();
+    controller = TextEditingController();
+    controller.addListener(() {
+      final isKeepButtonActive = controller.text.isNotEmpty;
+
+      setState(() => this.isKeepButtonActive = isKeepButtonActive);
+    });
+
     _speech = stt.SpeechToText();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('hogehoge'),
+        title: Text('Take memo with your voice'),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: AvatarGlow(
@@ -37,15 +54,53 @@ class _voiceTexterState extends State<voiceTexter> {
         repeat: true,
         child: FloatingActionButton(
           onPressed: _listen,
+          backgroundColor: Colors.green,
           child: Icon(_isListening ? Icons.mic : Icons.mic_none),
         ),
       ),
-      body: SingleChildScrollView(
-        reverse: true,
-        child: Container(
+      body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+        Container(
           padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 150.0),
-          child: Text(_text),
-        ),
+          child: TextField( enabled: false,controller: controller)
+         ),
+
+            Row(
+           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+           children: [
+              SizedBox(
+               height: 50,
+               width: 50,
+               child: IconButton(
+                icon: const Icon(Icons.save_alt),
+                onPressed: () {
+                  Navigator.of(context).pop(controller.text);
+                  print(controller.text);
+                  },
+              ),
+          ),
+
+             SizedBox(
+               height: 50,
+               width: 50,
+               child: IconButton(
+                 icon: const Icon(Icons.content_copy),
+                 onPressed: () async {
+                   await FlutterClipboard.copy(controller.text);
+
+                   final snackBar = SnackBar(
+                     content: const Text('✓   Copied to Clipboard'),
+                   );
+                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                 },
+               ),
+             ),
+
+
+           ], ),
+
+    ]
       ),
     );
   }
@@ -63,6 +118,7 @@ class _voiceTexterState extends State<voiceTexter> {
         _speech.listen(
             onResult: (val) => setState(() {
               _text = val.recognizedWords;
+              controller.text = val.recognizedWords;
             }),
             localeId: _localeId);
       }
@@ -73,24 +129,14 @@ class _voiceTexterState extends State<voiceTexter> {
   }
 }
 
-// SizedBox(
-// height: 60,
-// width: 60,
-// child: ElevatedButton(
-// child: const Icon(Icons.save_alt),
-// style: ElevatedButton.styleFrom(
-// primary: Colors.yellow,
-// onPrimary: Colors.white,
-// shape: const CircleBorder(
-// side: BorderSide(
-// color: Colors.yellow,
-// width: 1,
-// style: BorderStyle.solid,
-// ),
-// ),
-// ),
-// onPressed: () {
-// Navigator.of(context).pop(lastWords);
-// },
-// ),
-// ),
+
+//入力値が何もない時保存ボタンを無効にする
+//アプリをもう一度立ち上げた時でもメモのデータが消えないようにする
+//disableを使ってメモの削除とコピーを選択できるようにする
+//アプリのアイコンをデザインする
+
+
+//     {
+// Navigator.of(context).pop(controller.text);
+// print(controller.text);
+// }

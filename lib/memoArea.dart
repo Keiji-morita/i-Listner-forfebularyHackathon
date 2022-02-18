@@ -64,7 +64,7 @@ class _memoAreaState extends State<memoArea> {
           }
         },
         backgroundColor: Colors.green,
-        child: const Icon(Icons.settings_voice),
+        child: const Icon(Icons.mic),
       )
     );
   }
