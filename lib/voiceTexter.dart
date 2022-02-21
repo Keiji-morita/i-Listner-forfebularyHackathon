@@ -5,6 +5,7 @@ import 'package:clipboard/clipboard.dart';
 
 
 
+
 class voiceTexter extends StatefulWidget {
   @override
   _voiceTexterState createState() => _voiceTexterState();
@@ -13,10 +14,10 @@ class voiceTexter extends StatefulWidget {
 class _voiceTexterState extends State<voiceTexter> {
   late stt.SpeechToText _speech;
   bool _isListening = false;
-  String _text = 'Press the button and start speaking';
   String _localeId = '';
-  TextEditingController controller = TextEditingController();
-  bool isKeepButtonActive = true;
+  bool isKeepButtonActive = false;
+  late TextEditingController controller = TextEditingController();
+
 
   @override
   void initState() {
@@ -43,6 +44,7 @@ class _voiceTexterState extends State<voiceTexter> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Take memo with your voice'),
+          backgroundColor: Colors.green
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: AvatarGlow(
@@ -61,46 +63,59 @@ class _voiceTexterState extends State<voiceTexter> {
       body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-        Container(
-          padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 150.0),
-          child: TextField( enabled: false,controller: controller)
-         ),
+            Container(
+                padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 150.0),
+                child: TextField(enabled: false,
+                                decoration: const InputDecoration(
+                                 label: Text('Press the button and start speaking'),
+                               ),
+                            controller: controller
+                           )
+                          ),
+
+
 
             Row(
-           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-           children: [
-              SizedBox(
-               height: 50,
-               width: 50,
-               child: IconButton(
-                icon: const Icon(Icons.save_alt),
-                onPressed: () {
-                  Navigator.of(context).pop(controller.text);
-                  print(controller.text);
-                  },
-              ),
-          ),
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: IconButton(
+                      icon: const Icon(Icons.save_alt),
+                      onPressed: isKeepButtonActive
+                          ? () {
+                        setState(() => isKeepButtonActive = false);
+                        Navigator.of(context).pop(controller.text);
+                      }
+                          : null
+                    // onPressed: () {
+                    //   Navigator.of(context).pop(controller.text);
+                    //   print(controller.text);
+                    //   },
+                  ),
+                ),
 
-             SizedBox(
-               height: 50,
-               width: 50,
-               child: IconButton(
-                 icon: const Icon(Icons.content_copy),
-                 onPressed: () async {
-                   await FlutterClipboard.copy(controller.text);
+                SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: IconButton(
+                    icon: const Icon(Icons.content_copy),
+                    onPressed: () async {
+                      await FlutterClipboard.copy(controller.text);
 
-                   final snackBar = SnackBar(
-                     content: const Text('✓   Copied to Clipboard'),
-                   );
-                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                 },
-               ),
-             ),
+                      final snackBar = SnackBar(
+                        content: const Text('✓   Copied to Clipboard'),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    },
+                  ),
+                ),
 
 
-           ], ),
+              ], ),
 
-    ]
+          ]
       ),
     );
   }
@@ -117,7 +132,6 @@ class _voiceTexterState extends State<voiceTexter> {
         setState(() => _isListening = true);
         _speech.listen(
             onResult: (val) => setState(() {
-              _text = val.recognizedWords;
               controller.text = val.recognizedWords;
             }),
             localeId: _localeId);
@@ -130,13 +144,9 @@ class _voiceTexterState extends State<voiceTexter> {
 }
 
 
-//入力値が何もない時保存ボタンを無効にする
+
 //アプリをもう一度立ち上げた時でもメモのデータが消えないようにする
 //disableを使ってメモの削除とコピーを選択できるようにする
 //アプリのアイコンをデザインする
 
 
-//     {
-// Navigator.of(context).pop(controller.text);
-// print(controller.text);
-// }

@@ -39,6 +39,12 @@ dependencies:
   permission_handler:
   clipboard:
   avatar_glow:
+  flutter_launcher_icons:
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/icon.png"
 
 
 dev_dependencies:
