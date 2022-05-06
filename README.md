@@ -16,4 +16,9 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 # i-Listner-forfebularyHackathon
 
+アプリ名：　i-Listner
+基本機能：　音声入力を文字起こししてメモとして残せる。
+特色：起こした文字を保存するだけでなくコピペができる機能も実装した点。
+制作期間：2週間強
+
 ![RPReplay_Final1645327965_MP4_AdobeCreativeCloudExpress](https://user-images.githubusercontent.com/87302097/167066560-999781a4-6ef4-4e49-90bc-0a435b7d52e9.gif)
