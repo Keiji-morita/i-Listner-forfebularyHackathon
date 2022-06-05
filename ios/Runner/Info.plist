@@ -47,5 +47,7 @@
 	<string>Recognize and display speech input</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Detect speech input</string>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 </dict>
 </plist>
