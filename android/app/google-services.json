@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "154321634481",
+    "project_id": "i-listener-cd589",
+    "storage_bucket": "i-listener-cd589.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:154321634481:android:96cc9d7c78776a73c90e90",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "154321634481-6krpqrb1lj836uta5npu23mv9i70g2eb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgHWBVMf03lVeuQPe527Aiv2SGHy0WMSQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "154321634481-6krpqrb1lj836uta5npu23mv9i70g2eb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
