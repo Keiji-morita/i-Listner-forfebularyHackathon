@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:secondfebproject/memoArea.dart';
@@ -27,7 +28,29 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home: LoginWithGoogle(),
+      home: pageRoute(),
     );
   }
+}
+
+class pageRoute extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => MaterialApp(
+        title: 'Flutter app',
+        home: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // スプラッシュ画面などに書き換えても良い
+              return const SizedBox();
+            }
+            if (snapshot.hasData) {
+              // User が null でなない、つまりサインイン済みのホーム画面へ
+              return memoArea();
+            }
+            // User が null である、つまり未サインインのサインイン画面へ
+            return LoginWithGoogle();
+          },
+        ),
+      );
 }
