@@ -31,7 +31,7 @@ class _LoginWithGoogleState extends State<LoginWithGoogle> {
         
               await GoogleSignIn().signOut();
               setState(() {
-
+                
               });
             }, child: Text("Logout"))
           ],
