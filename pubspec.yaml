@@ -40,6 +40,9 @@ dependencies:
   clipboard:
   avatar_glow:
   flutter_launcher_icons:
+  firebase_core: ^1.17.1
+  firebase_auth: ^3.3.19
+  google_sign_in: ^5.3.3
 
 flutter_icons:
   android: true
