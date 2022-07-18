@@ -1,25 +1,30 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
+import 'package:secondfebproject/presentation/notifire/memo_notifire.dart';
+import 'package:secondfebproject/presentation/notifire/memo_notifire.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:clipboard/clipboard.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../notifire/memo_notifire.dart';
+import '../notifire/memo_notifire.dart';
 
 
 
 
-class voiceTexter extends StatefulWidget {
+class voiceTexter extends ConsumerStatefulWidget {
   @override
   _voiceTexterState createState() => _voiceTexterState();
 }
 
-class _voiceTexterState extends State<voiceTexter> {
+class _voiceTexterState extends ConsumerState<voiceTexter> {
   late stt.SpeechToText _speech;
   bool _isListening = false;
   String _localeId = '';
   bool isKeepButtonActive = false;
   late TextEditingController controller = TextEditingController();
 
-
-  @override
+    @override
   void initState() {
     super.initState();
     controller = TextEditingController();
@@ -35,12 +40,20 @@ class _voiceTexterState extends State<voiceTexter> {
   @override
   void dispose() {
     controller.dispose();
-
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+      late stt.SpeechToText _speech;
+      bool _isListening = false;
+      String _localeId = '';
+      bool isKeepButtonActive = false;
+      late TextEditingController controller = TextEditingController();
+
+    final notifier = ref.watch(memoNotifierProvider.MemoNotifier);
+
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Take memo with your voice'),
@@ -67,10 +80,10 @@ class _voiceTexterState extends State<voiceTexter> {
                 padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 150.0),
                 child: TextField(enabled: false,
                                 decoration: const InputDecoration(
-                                 label: Text('Press the button and start speaking'),
-                               ),
+                                label: Text('Press the button and start speaking'),
+                              ),
                             controller: controller
-                           )
+                          )
                           ),
 
 
@@ -86,13 +99,11 @@ class _voiceTexterState extends State<voiceTexter> {
                       onPressed: isKeepButtonActive
                           ? () {
                         setState(() => isKeepButtonActive = false);
+
                         Navigator.of(context).pop(controller.text);
                       }
                           : null
-                    // onPressed: () {
-                    //   Navigator.of(context).pop(controller.text);
-                    //   print(controller.text);
-                    //   },
+
                   ),
                 ),
 
