@@ -1,8 +1,14 @@
+
+
 import 'package:flutter/material.dart';
-import 'package:secondfebproject/memoArea.dart';
+import 'package:secondfebproject/presentation/pages/memoArea.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path/path.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(child: MyApp())
+    );
 }
 
 class MyApp extends StatelessWidget {

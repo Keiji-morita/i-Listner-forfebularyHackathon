@@ -1,5 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:secondfebproject/voiceTexter.dart';
+import 'package:secondfebproject/presentation/pages/voiceTexter.dart';
 // import 'package:flutter_slidable/flutter_slidable.dart';
 
 class memoArea extends StatefulWidget {
@@ -21,7 +22,7 @@ class _memoAreaState extends State<memoArea> {
       // AppBarを表示し、タイトルも設定
         appBar: AppBar(
           title: Text('Home'),
-            backgroundColor: Colors.green
+            backgroundColor: Colors.green,
         ),
         // データを元にListViewを作成
         body: ListView.builder(
