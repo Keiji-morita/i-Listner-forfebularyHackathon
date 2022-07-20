@@ -12,7 +12,7 @@ final memoNotifierProvider = StateNotifierProvider<MemoNotifier, MemoState>(
 
     final List<Memo> memoList;
 
-    MemoState copyWith(List<Memo>? memoList) {
+    MemoState copyWith({List<Memo>? memoList}) {
       return MemoState(memoList: memoList ?? <Memo>[]);
     }
   }
@@ -25,17 +25,17 @@ final memoNotifierProvider = StateNotifierProvider<MemoNotifier, MemoState>(
     // final MemoRepository _memoRepository;
     final Ref  _ref;
 
-    get content => null;
 
-    void addMemo(Memo memo){
+    void addMemo(String content) async{
       final id = state.memoList.length + 1;
-      
+
       state = state.copyWith(
         memoList : [
-          const Memo().copyWith(String content, id int),
-          ...state.memoList;
+          const Memo().copyWith(id:id, content: content),
+          ...state.memoList
+          // deepcopy or spread operator 
+          //copywithは型定義に注意
         ]
-
       );
 
     }

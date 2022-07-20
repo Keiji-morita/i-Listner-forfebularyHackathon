@@ -2,10 +2,12 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:secondfebproject/presentation/notifire/memo_notifire.dart';
 import 'package:secondfebproject/presentation/notifire/memo_notifire.dart';
+import 'package:secondfebproject/presentation/notifire/memo_notifire.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../notifire/memo_notifire.dart';
 import '../notifire/memo_notifire.dart';
 import '../notifire/memo_notifire.dart';
 
@@ -44,14 +46,14 @@ class _voiceTexterState extends ConsumerState<voiceTexter> {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
       late stt.SpeechToText _speech;
       bool _isListening = false;
       String _localeId = '';
       bool isKeepButtonActive = false;
       late TextEditingController controller = TextEditingController();
 
-    final notifier = ref.watch(memoNotifierProvider.MemoNotifier);
+    final notifier = ref.watch(memoNotifierProvider.notifier);
 
 
     return Scaffold(
@@ -78,7 +80,7 @@ class _voiceTexterState extends ConsumerState<voiceTexter> {
           children: <Widget>[
             Container(
                 padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 150.0),
-                child: TextField(enabled: false,
+                child: TextField(
                                 decoration: const InputDecoration(
                                 label: Text('Press the button and start speaking'),
                               ),
@@ -96,14 +98,12 @@ class _voiceTexterState extends ConsumerState<voiceTexter> {
                   width: 50,
                   child: IconButton(
                       icon: const Icon(Icons.save_alt),
-                      onPressed: isKeepButtonActive
-                          ? () {
-                        setState(() => isKeepButtonActive = false);
+                      onPressed: () async{
 
-                        Navigator.of(context).pop(controller.text);
+
+                        notifier.addMemo(controller.text);
+                        Navigator.pop(context);
                       }
-                          : null
-
                   ),
                 ),
 
