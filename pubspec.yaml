@@ -46,6 +46,7 @@ dependencies:
   freezed: ^2.1.0+1
   riverpod: ^1.0.3
   flutter_riverpod: ^1.0.4
+  sqflite: ^2.0.3
 
 flutter_icons:
   android: true

@@ -13,6 +13,13 @@ class Memo{
     return Memo(id:id ?? this.id, content: content ?? this.content);
   }
 
+      factory Memo.fromJson(Map<String, dynamic> json){
+      return Memo(
+        id: json['id'],
+        content: json['content']
+      );
+    }
+
       Map<String, Object?> toJson() => {
         'id' : id,
       'content': content,
