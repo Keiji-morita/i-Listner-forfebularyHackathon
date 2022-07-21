@@ -1,26 +1,34 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:secondfebproject/domain/db/memo_db.dart';
 import 'package:secondfebproject/domain/memo/memo_data.dart';
 
-class MemoRepository {
-    final _db = MemoDatabase(); 
-    
-    final MemoDatabase _memoDatabase;
+final memoRepoProvider = Provider<MemoRepository>(
+  (ref) => MemoRepository(),
+  );
 
-    MemoRepository(this._memoDatabase);
+class MemoRepository {
+  
+    MemoRepository();
+
+
+//値が何もない状態で定数化できない
+    final _db = MemoDatabase(); 
+
+    // MemoRepository(this._db);
     
     Future<List<Memo>> getMemos() async {
-      return await _memoDatabase.getMemos();
+      return await _db.getMemos();
     }
 
     Future<Memo> addMemo(Memo memo) async {
-      return  _memoDatabase.insertMemo(memo);
+      return  _db.insertMemo(memo);
     }
 
     Future<void> updateMemo(Memo memo) async {
-      return  _memoDatabase.updateMemo(Memo, memo);
+      return  _db.updateMemo(Memo, memo);
     }
 
     Future<void> deleteMemo(int id) async {
-      return _memoDatabase.deleteMemo(id, Memo);
+      return _db.deleteMemo(id, Memo);
     }
   }

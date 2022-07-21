@@ -5,9 +5,7 @@ import 'package:secondfebproject/domain/memo/memo_repository.dart';
 import '../../domain/memo/memo_data.dart';
 
 final memoNotifierProvider = StateNotifierProvider<MemoNotifier, MemoState>(
-  (ref) => MemoNotifier(ref: ref,
-    MemoRepository(),
-    ),
+  (ref) => MemoNotifier(ref: ref),
   );
   
   class MemoState {
@@ -21,19 +19,28 @@ final memoNotifierProvider = StateNotifierProvider<MemoNotifier, MemoState>(
 
   class MemoNotifier extends StateNotifier<MemoState> {
     //コンストラクターでリポジトリーについての記述を書く
-    MemoNotifier(this._memoRepository,{required Ref ref})
+    //refがコンストラクターの代わりに呼び出しをおこなっている
+    //refのみに依存させることで
+    //コンストラクタのrefを呼び出す必要あり
+
+    MemoNotifier({required Ref ref})
       : _ref = ref,
+      //superクラス　MemoStateのコンストラクターを呼び出している
         super(const MemoState()) {
           getMemos();
       }
 
     final Ref  _ref;
-    final MemoRepository _memoRepository;
+
 
 
     void addMemo(String content) async{
       final id = state.memoList.length + 1;
-      final memos = await _memoRepository.addMemo(
+      //notifier statenotifier連携　ref
+      //repositoryにproveiderを作ってそれを参照
+
+      final memoRepo = _ref.watch(memoRepoProvider);
+      final memos = await memoRepo.addMemo(
         Memo(
         id: id,
         content: content,
@@ -52,7 +59,9 @@ final memoNotifierProvider = StateNotifierProvider<MemoNotifier, MemoState>(
     }
 
       Future<List<Memo>> getMemos() async {
-    final memos = await _memoRepository.getMemos();
+
+    final memoRepo = _ref.watch(memoRepoProvider);
+    final memos = await memoRepo.getMemos();
     state = state.copyWith(memoList: memos);
     return memos;
   }

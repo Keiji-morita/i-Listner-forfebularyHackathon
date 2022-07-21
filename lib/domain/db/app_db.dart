@@ -13,7 +13,7 @@ class AppDatabase {
   }
 
   Future<Database> _initDB() async {
-    String path = join(await getDatabasesPath(), 'todo.db');
+    String path = join(await getDatabasesPath(), 'memos.db');
 
     return await openDatabase(
       path,
@@ -24,9 +24,9 @@ class AppDatabase {
 
   Future<void> _createTable(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE todos(
+      CREATE TABLE memos(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        content TEXT,
+        content TEXT
       )
     ''');
   }
