@@ -84,7 +84,7 @@ class _voiceTexterState extends ConsumerState<voiceTexter> {
              padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 150.0),
              child: TextField(
             decoration: new InputDecoration.collapsed(
-            hintText: 'Press button to text'
+            hintText: 'Press button to '
               ),
               controller: controller
             ),
@@ -101,8 +101,10 @@ class _voiceTexterState extends ConsumerState<voiceTexter> {
                   child: IconButton(
                       icon: const Icon(Icons.save_alt),
                       onPressed: () async{
+
+
                         notifier.addMemo(controller.text);
-                        Navigator.pop(context).pop(controller.text);
+                        Navigator.pop(context);
                       }
                   ),
                 ),
