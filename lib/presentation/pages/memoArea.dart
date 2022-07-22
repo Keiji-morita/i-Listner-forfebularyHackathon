@@ -8,8 +8,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class memoArea extends ConsumerWidget {
   const memoArea({Key? key}) : super(key: key);
 
-
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(memoNotifierProvider);
@@ -34,7 +32,7 @@ class memoArea extends ConsumerWidget {
               },
             child: SizedBox(
               height: 70,
-             child: Card(
+              child: Card(
                 child: Center(
                   child: Text(memo.content),
                 )

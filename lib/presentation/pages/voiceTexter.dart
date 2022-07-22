@@ -6,6 +6,7 @@ import 'package:secondfebproject/presentation/notifire/memo_notifire.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:highlight_text/highlight_text.dart';
 
 import '../notifire/memo_notifire.dart';
 import '../notifire/memo_notifire.dart';
@@ -20,6 +21,7 @@ class voiceTexter extends ConsumerStatefulWidget {
 }
 
 class _voiceTexterState extends ConsumerState<voiceTexter> {
+
   late stt.SpeechToText _speech;
   bool _isListening = false;
   String _localeId = '';
@@ -49,7 +51,7 @@ class _voiceTexterState extends ConsumerState<voiceTexter> {
   Widget build(BuildContext context) {
       late stt.SpeechToText _speech;
       bool _isListening = false;
-      String _localeId = '';
+      String _text = '';
       bool isKeepButtonActive = false;
       late TextEditingController controller = TextEditingController();
 
@@ -78,15 +80,15 @@ class _voiceTexterState extends ConsumerState<voiceTexter> {
       body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Container(
-                padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 150.0),
-                child: TextField(
-                                decoration: const InputDecoration(
-                                label: Text('Press the button and start speaking'),
-                              ),
-                            controller: controller
-                          )
-                          ),
+        Container(
+             padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 150.0),
+             child: TextField(
+            decoration: new InputDecoration.collapsed(
+            hintText: 'Press button to text'
+              ),
+              controller: controller
+            ),
+        ),
 
 
 
@@ -99,10 +101,8 @@ class _voiceTexterState extends ConsumerState<voiceTexter> {
                   child: IconButton(
                       icon: const Icon(Icons.save_alt),
                       onPressed: () async{
-
-
                         notifier.addMemo(controller.text);
-                        Navigator.pop(context);
+                        Navigator.pop(context).pop(controller.text);
                       }
                   ),
                 ),
@@ -156,8 +156,7 @@ class _voiceTexterState extends ConsumerState<voiceTexter> {
 
 
 
-//アプリをもう一度立ち上げた時でもメモのデータが消えないようにする
 //disableを使ってメモの削除とコピーを選択できるようにする
-//アプリのアイコンをデザインする
+
 
 
