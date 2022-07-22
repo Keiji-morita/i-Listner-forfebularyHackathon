@@ -29,6 +29,6 @@ class MemoRepository {
     }
 
     Future<void> deleteMemo(int id) async {
-      return _db.deleteMemo(id, Memo);
+      return _db.deleteMemo(id);
     }
   }

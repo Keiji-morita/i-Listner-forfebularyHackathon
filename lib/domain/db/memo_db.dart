@@ -41,12 +41,12 @@ class MemoDatabase extends AppDatabase{
 
   }
 
-  Future<void> deleteMemo(int id, memos) async {
+  Future<void> deleteMemo(int id) async {
     final db = await database;
-    final id = db.delete(
-      _tableName,
+    await db.delete(
+      'memos',
       where: "id = ?",
-      whereArgs: [memos.id],
+      whereArgs: [id],
     );
   }
 

@@ -34,7 +34,7 @@ final memoNotifierProvider = StateNotifierProvider<MemoNotifier, MemoState>(
 
 
 
-    void addMemo(String content) async{
+    Future<void> addMemo(String content) async{
       final id = state.memoList.length + 1;
       //notifier statenotifier連携　ref
       //repositoryにproveiderを作ってそれを参照
@@ -66,8 +66,9 @@ final memoNotifierProvider = StateNotifierProvider<MemoNotifier, MemoState>(
     return memos;
   }
 
-    void deleteMemo(int id){
+    Future<void> deleteMemo(int id) async {
       final newList = state.memoList.where((Memo) => Memo.id != id).toList();
+      state = state.copyWith(memoList: newList);
     }
   }
 
