@@ -34,12 +34,11 @@ class memoArea extends ConsumerWidget {
               },
             child: SizedBox(
               height: 70,
-             child: Card(
+              child: Card(
                 child: Center(
                   child: Text(memo.content),
                 )
-
-               ,)
+              ,)
               ,)
             );
 
@@ -47,13 +46,18 @@ class memoArea extends ConsumerWidget {
         ),
 
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-              builder: (context) =>  voiceTexter(),
-            ),
+          onPressed: () async {
+          final newListText = await Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) {
+              // 遷移先の画面としてリスト追加画面を指定
+              return voiceTexter();
+            }),
           );
+          if (newListText != null) {
+            // キャンセルした場合は newListText が null となるので注意
+            notifier.addMemo(newListText);
+          }
+
           },
           backgroundColor: Colors.green,
           child: const Icon(Icons.settings_voice),
