@@ -29,8 +29,10 @@ class memoArea extends ConsumerWidget {
 
             return new Dismissible(
               key: Key(state.memoList.length.toString()),
-              onDismissed: (DismissDirection direction) {
-                notifier.deleteMemo(memo.id);
+              onDismissed: (DismissDirection direction) async {
+                await notifier.deleteMemo(memo.id);
+                print(state.memoList.length);
+                     
               },
             child: SizedBox(
               height: 70,

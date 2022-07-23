@@ -65,12 +65,15 @@ class _voiceTexterState extends State<voiceTexter> {
           children: <Widget>[
             Container(
                 padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 150.0),
-                child: TextField(enabled: false,
-                                decoration: const InputDecoration(
-                                label: Text('Press the button and start speaking'),
-                            ),
-                            controller: controller
-                          )
+                child: Text(
+                  controller.text
+                ),
+                // TextField(enabled: false,
+                //                 decoration: const InputDecoration(
+                //                 label: Text('Press the button and start speaking'),
+                //             ),
+                //             controller: controller
+                //           )
                         ),
 
 
@@ -145,7 +148,7 @@ class _voiceTexterState extends State<voiceTexter> {
 
 
 
-//アプリをもう一度立ち上げた時でもメモのデータが消えないようにする
+
 //disableを使ってメモの削除とコピーを選択できるようにする
-//アプリのアイコンをデザインする
+
 

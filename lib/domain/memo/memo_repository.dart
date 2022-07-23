@@ -28,6 +28,8 @@ class MemoRepository {
       return  _db.updateMemo(Memo, memo);
     }
 
+      //deleteできないのはidが渡っていない？
+      //updateを使えていない？
     Future<void> deleteMemo(int id) async {
       return _db.deleteMemo(id);
     }

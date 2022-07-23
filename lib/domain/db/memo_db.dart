@@ -37,17 +37,20 @@ class MemoDatabase extends AppDatabase{
     memos.toMap(),
     where: "id = ?",
     whereArgs: [memos.id],
+    conflictAlgorithm: ConflictAlgorithm.fail,
     );
 
   }
 
-  Future<void> deleteMemo(int id) async {
+  Future deleteMemo(int id) async {
     final db = await database;
-    await db.delete(
-      'memos',
-      where: "id = ?",
+
+    return await db.delete(
+      _tableName,
+      where: 'id = ?',
       whereArgs: [id],
     );
   }
+
 
 }
